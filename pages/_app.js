@@ -1,20 +1,24 @@
 import App from 'next/app';
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
 
-import { ContextProvider } from '../store/state';
+import { ThemeProvider } from 'styled-components';
+import { withApollo } from '../lib/apollo';
+
+import BaseLayout from '../components/layouts/BaseLayout';
 
 import theme from '../static/styles/Theme';
 
-export default class MyApp extends App {
+class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-      <ContextProvider>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <BaseLayout>
           <Component {...pageProps} />
-        </ThemeProvider>
-      </ContextProvider>
+        </BaseLayout>
+      </ThemeProvider>
     );
   }
 }
+
+export default withApollo(MyApp);
