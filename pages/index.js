@@ -1,8 +1,9 @@
-import React from 'react';
+import BlockNumber from '../components/BlockNumber';
 
 const index = () => (
   <div>
     <h1>Hello World!</h1>
+    <BlockNumber />
   </div>
 );
 

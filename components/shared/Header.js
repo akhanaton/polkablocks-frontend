@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import NProgress from 'nprogress';
 import Router from 'next/router';
 
-import Logo from './Logo';
+// import Logo from './Logo';
 // import Navbar from './Navbar';
 
 Router.onRouteChangeStart = () => {
@@ -30,10 +30,8 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => (
-  <StyledHeader>
-    <Logo height="40px" />
-    {/* <Navbar  /> */}
-  </StyledHeader>
+  <StyledHeader>{/* <Logo height="40px" />
+     <Navbar  /> */}</StyledHeader>
 );
 
 export default Header;
