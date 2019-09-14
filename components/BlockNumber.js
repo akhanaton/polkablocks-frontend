@@ -6,7 +6,7 @@ const BlockNumber = () => {
   const { loading, error, data } = useSubscription(GET_BLOCK_NUMBER);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-
+  console.log(data);
   return (
     <div>
       <p>{data.blockHeight}</p>
