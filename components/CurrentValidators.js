@@ -8,18 +8,27 @@ import { SESSION_VAL_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 const StyledCurrent = styled.div`
   .number {
     font-size: 1.5rem;
+    color: ${props => props.theme.colors.neutralBaseUpOne};
   }
-  min-width: 650px;
+  .next-header {
+    display: flex;
+    justify-content: space-between;
+  }
   flex: none;
   display: flex;
   flex-direction: column;
+
   > div {
-    display: flex;
-    justify-content: space-between;
     h3 {
-      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
     }
   }
+`;
+
+const StyledLoader = styled.div`
+  text-align: center;
+  margin-top: 2.5rem;
 `;
 
 const CurrentValidators = () => {
@@ -31,6 +40,19 @@ const CurrentValidators = () => {
     data: countData,
   } = useQuery(VALIDATOR_COUNT_QUERY);
 
+  if (loading)
+    return (
+      <StyledLoader>
+        <Loader
+          type="Bars"
+          color="#00BFFF"
+          height={80}
+          width={80}
+          timeout={10000} // 3 secs
+        />
+      </StyledLoader>
+    );
+
   if (loading) return <p />;
   if (error) return `Error! ${error.message}`;
   if (countLoading) return 'Loading...';
@@ -38,11 +60,11 @@ const CurrentValidators = () => {
 
   return (
     <StyledCurrent>
-      <div>
+      <div className="next-header">
         <h3>Validators</h3>
         <p>
           <span className="number">{countData.validatorCount}</span>
-          slots
+          &nbsp;slots
         </p>
       </div>
       {data.sessionValidators.map((validator, index) => (

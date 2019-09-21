@@ -19,6 +19,7 @@ const Main = styled.main`
     display: flex;
     justify-content: center;
     margin-bottom: 3rem;
+    font-weight: 400;
   }
 `;
 

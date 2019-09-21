@@ -15,15 +15,17 @@ const Dashboard = styled.div`
 `;
 
 const Holder = styled.div`
-  min-width: 634px;
+  min-width: 580px;
 `;
 
 const index = () => (
   <BaseLayout title="Home">
     <>
-      <h1>Kusama Validator Rankings</h1>
+      <h1>Kusama Validator Ranking</h1>
       <Dashboard>
-        <CurrentValidators />
+        <Holder>
+          <CurrentValidators />
+        </Holder>
         <Holder>
           <DynamicNextUptWithNoSSR />
         </Holder>
