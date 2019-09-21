@@ -26,7 +26,7 @@ const StyledHeader = styled.header`
   padding: 0 2rem;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0px 0px 20px -10px rgba(0, 0, 0, 0.35);
+  /*box-shadow: 0px 0px 20px -10px rgba(0, 0, 0, 0.35);*/
 `;
 
 const Header = () => (

@@ -14,7 +14,12 @@ const Layout = styled.div`
 const Main = styled.main`
   margin: 8rem auto 2rem;
   max-width: ${props => props.theme.maxWidth};
-  height: 90%;
+  min-height: 90%;
+  > h1 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
 `;
 
 const BaseLayout = ({ children, title = '' }) => (
