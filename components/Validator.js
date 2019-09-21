@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import Identicon from '@polkadot/react-identicon';
 
-import { humanize } from '../lib/validators';
+import { humanize, formatAddress } from '../lib/validators';
 
 const StyledValidator = styled.div`
   display: grid;
@@ -21,16 +21,35 @@ const StyledValidator = styled.div`
       grid-row: 1/3;
       text-align: center;
     }
+    &:nth-child(2) {
+      align-self: center;
+
+      color: ${props => props.theme.colors.neutralBaseDownOne};
+    }
     &:nth-child(3) {
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
       font-size: 1.2rem;
       color: ${props => props.theme.colors.neutralBaseDownTwo};
     }
+    &:nth-child(4) {
+      min-height: 1.75rem;
+    }
     &:nth-child(5) {
       grid-column: 2/3;
+      min-height: 1.75rem;
     }
+  }
+  .asset {
+    font-size: 0.6rem;
+  }
+  .amount {
+    font-weight: 600;
+  }
+  .account {
+    font-size: 0.8rem;
+    display: inline;
   }
 `;
 const size = 36;
@@ -42,7 +61,7 @@ const Validator = ({ validator, position }) => (
       <Identicon value={validator.controllerId} size={size} theme={theme} />
     </div>
     <div>
-      <p>{validator.controllerId}</p>
+      <p>{formatAddress(validator.controllerId)}</p>
     </div>
     <div>
       <p>{humanize(position.toString())}</p>
@@ -50,27 +69,23 @@ const Validator = ({ validator, position }) => (
 
     {validator.freeBalance && (
       <div>
-        <p>
-          Stash:&nbsp;
-          <span>
-            {(parseFloat(validator.freeBalance) / 1000000000000).toFixed(3)}
-          </span>
-          &nbsp;
-          <span>KSM</span>
-        </p>
+        <p className="account">Stash:</p>&nbsp;
+        <span className="amount">
+          {(parseFloat(validator.freeBalance) / 1000000000000).toFixed(3)}
+        </span>
+        &nbsp;
+        <span className="asset">KSM</span>
       </div>
     )}
 
     {validator.activeBonded && (
       <div>
-        <p>
-          Bond:&nbsp;
-          <span>
-            {(parseFloat(validator.activeBonded) / 1000000000000).toFixed(3)}
-          </span>
-          &nbsp;
-          <span>KSM</span>
-        </p>
+        <p className="account">Bond:</p>&nbsp;
+        <span className="amount">
+          {(parseFloat(validator.activeBonded) / 1000000000000).toFixed(3)}
+        </span>
+        &nbsp;
+        <span className="asset">KSM</span>
       </div>
     )}
   </StyledValidator>
