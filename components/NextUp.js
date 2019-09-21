@@ -11,14 +11,20 @@ import { sortValidators } from '../lib/validators';
 const StyledNextUp = styled.div`
   .number {
     font-size: 1.5rem;
+    color: ${props => props.theme.colors.neutralBaseUpOne};
   }
   .next-header {
     display: flex;
     justify-content: space-between;
   }
+  .small-print {
+    font-size: 0.7rem;
+    color: ${props => props.theme.colors.neutralBaseUpOne};
+  }
   margin-left: 1rem;
   h3 {
     margin-bottom: 1.5rem;
+    font-weight: 300;
   }
 `;
 
@@ -40,9 +46,9 @@ const NextUp = () => {
         <Loader
           type="Bars"
           color="#00BFFF"
-          height={100}
-          width={100}
-          timeout={75000} // 3 secs
+          height={80}
+          width={80}
+          timeout={10000} // 3 secs
         />
       </StyledLoader>
     );
@@ -51,12 +57,16 @@ const NextUp = () => {
   return (
     <StyledNextUp>
       <div className="next-header">
-        <h3>Next Up</h3>
+        <h3>
+          Next Up{' '}
+          <span className="small-print">updated every five minutes</span>
+        </h3>
+
         <p>
           <span className="number">
             {validatorData.stakingValidators.length}
           </span>
-          waiting
+          &nbsp;waiting
         </p>
       </div>
       {sortValidators(validatorData.stakingValidators).map(
