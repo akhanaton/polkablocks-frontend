@@ -1,12 +1,12 @@
 import React from 'react';
 import { useSubscription } from '@apollo/react-hooks';
-import { GET_BLOCK_NUMBER } from '../graphql/subscriptions';
+import { BLOCK_NUMBER_SUBSCRIPTION } from '../graphql/subscriptions';
 
 const BlockNumber = () => {
-  const { loading, error, data } = useSubscription(GET_BLOCK_NUMBER);
+  const { loading, error, data } = useSubscription(BLOCK_NUMBER_SUBSCRIPTION);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  console.log(data);
+
   return (
     <div>
       <p>{data.blockHeight}</p>

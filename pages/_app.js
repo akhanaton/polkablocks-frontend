@@ -4,8 +4,6 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { withApollo } from '../lib/apollo';
 
-import BaseLayout from '../components/layouts/BaseLayout';
-
 import theme from '../static/styles/Theme';
 
 class MyApp extends App {
@@ -13,9 +11,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <ThemeProvider theme={theme}>
-        <BaseLayout>
-          <Component {...pageProps} />
-        </BaseLayout>
+        <Component {...pageProps} />
       </ThemeProvider>
     );
   }
