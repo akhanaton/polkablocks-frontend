@@ -2,8 +2,10 @@
 
 import styled from 'styled-components';
 import Identicon from '@polkadot/react-identicon';
-
-import { humanize, formatAddress } from '../lib/validators';
+import useClipboard from 'react-use-clipboard';
+import Clipboard from 'simple-react-clipboard';
+import Icon from '../utils/Icon';
+import { humanize, formatAddress, currencyFormat } from '../lib/validators';
 
 const StyledValidator = styled.div`
   display: grid;
@@ -22,6 +24,7 @@ const StyledValidator = styled.div`
       text-align: center;
     }
     &:nth-child(2) {
+      display: flex;
       align-self: center;
 
       color: ${props => props.theme.colors.neutralBaseDownOne};
@@ -41,6 +44,9 @@ const StyledValidator = styled.div`
       min-height: 1.75rem;
     }
   }
+  button:focus {
+    outline: 0 !important;
+  }
   .asset {
     font-size: 0.6rem;
   }
@@ -51,44 +57,78 @@ const StyledValidator = styled.div`
     font-size: 0.8rem;
     display: inline;
   }
+  .icon {
+    margin-left: 0.5rem;
+    background: transparent;
+    border: none;
+  }
+  .copied {
+    margin-left: 1rem;
+    font-size: 0.75rem;
+    color: ${props => props.theme.colors.neutralBaseDownOne};
+  }
 `;
 const size = 36;
 const theme = 'polkadot';
 
-const Validator = ({ validator, position }) => (
-  <StyledValidator>
-    <div>
-      <Identicon value={validator.controllerId} size={size} theme={theme} />
-    </div>
-    <div>
-      <p>{formatAddress(validator.controllerId)}</p>
-    </div>
-    <div>
-      <p>{humanize(position.toString())}</p>
-    </div>
+const Validator = ({ validator, position }) => {
+  const [isCopied, setCopied] = useClipboard('', {
+    successDuration: 1000,
+  });
 
-    {validator.freeBalance && (
+  return (
+    <StyledValidator>
       <div>
-        <p className="account">Stash:</p>&nbsp;
-        <span className="amount">
-          {(parseFloat(validator.freeBalance) / 1000000000000).toFixed(3)}
-        </span>
-        &nbsp;
-        <span className="asset">KSM</span>
+        <Identicon value={validator.controllerId} size={size} theme={theme} />
       </div>
-    )}
+      <div>
+        <p>{formatAddress(validator.controllerId)}</p>
+        <Clipboard
+          text={validator.controllerId}
+          render={({ copy }) => (
+            <button
+              type="button"
+              className="icon"
+              onClick={() => {
+                setCopied();
+                copy();
+              }}
+            >
+              <span className="noSelect">
+                <Icon name="copy-light" width="18" color="#8996a8" />
+                <span className="copied">{isCopied ? 'copied' : ''}</span>
+              </span>
+            </button>
+          )}
+        />
+      </div>
+      <div>
+        <p>{humanize(position.toString())}</p>
+      </div>
 
-    {validator.activeBonded && (
-      <div>
-        <p className="account">Bond:</p>&nbsp;
-        <span className="amount">
-          {(parseFloat(validator.activeBonded) / 1000000000000).toFixed(3)}
-        </span>
-        &nbsp;
-        <span className="asset">KSM</span>
-      </div>
-    )}
-  </StyledValidator>
-);
+      {validator.freeBalance && (
+        <div>
+          <p className="account">stash:</p>&nbsp;
+          <span className="amount">
+            {currencyFormat(parseFloat(validator.freeBalance) / 1000000000000)}
+          </span>
+          &nbsp;
+          <span className="asset">ksm</span>
+        </div>
+      )}
+
+      {validator.activeBonded && (
+        <div>
+          <p className="account">bond:</p>&nbsp;
+          <span className="amount">
+            {currencyFormat(parseFloat(validator.activeBonded) / 1000000000000)}
+          </span>
+          &nbsp;
+          <span className="asset">ksm</span>
+        </div>
+      )}
+    </StyledValidator>
+  );
+};
 
 export default Validator;

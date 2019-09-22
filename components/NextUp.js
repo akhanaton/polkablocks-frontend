@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/react-hooks';
-import debounceRender from 'react-debounce-render';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
@@ -82,4 +81,4 @@ const NextUp = () => {
   );
 };
 
-export default debounceRender(NextUp, 100);
+export default NextUp;
