@@ -26,9 +26,7 @@ const Main = styled.main`
 const BaseLayout = ({ children, title = '' }) => (
   <Layout>
     <Head>
-      <title>
-        {title} | Polkablocks - Polkadot and Kusama Staking Dashboard
-      </title>
+      <title>{title} | Polkadot and Kusama Staking Dashboard</title>
     </Head>
     <Meta />
     <Header />
