@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.neutralBase};
     font-weight: 300;
     text-rendering: optimizeLegibility;
+    
   }
 `;
 
