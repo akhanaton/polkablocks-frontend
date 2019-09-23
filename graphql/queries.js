@@ -28,6 +28,7 @@ export const STAKING_VAL_QUERY = gql`
       totalBonded
       activeBonded
       accountId
+      validatorPayment
     }
   }
 `;
