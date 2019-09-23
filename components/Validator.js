@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Identicon from '@polkadot/react-identicon';
 import useClipboard from 'react-use-clipboard';
 import Clipboard from 'simple-react-clipboard';
+import ReactTooltip from 'react-tooltip';
+
 import Icon from '../utils/Icon';
 import { humanize, formatAddress, currencyFormat } from '../lib/validators';
 
@@ -40,6 +42,10 @@ const StyledValidator = styled.div`
       min-height: 1.75rem;
     }
     &:nth-child(5) {
+      grid-column: 2/3;
+      min-height: 1.75rem;
+    }
+    &:nth-child(6) {
       grid-column: 2/3;
       min-height: 1.75rem;
     }
@@ -108,7 +114,7 @@ const Validator = ({ validator, position }) => {
 
       {validator.freeBalance && (
         <div>
-          <p className="account">stash:</p>&nbsp;
+          <p className="account">total:</p>&nbsp;
           <span className="amount">
             {currencyFormat(parseFloat(validator.freeBalance) / 1000000000000)}
           </span>
@@ -119,12 +125,23 @@ const Validator = ({ validator, position }) => {
 
       {validator.activeBonded && (
         <div>
-          <p className="account">bond:</p>&nbsp;
+          <p className="account">bonded:</p>&nbsp;
           <span className="amount">
             {currencyFormat(parseFloat(validator.activeBonded) / 1000000000000)}
           </span>
           &nbsp;
           <span className="asset">ksm</span>
+        </div>
+      )}
+      {validator.validatorPayment && (
+        <div>
+          <p className="account">comm:</p>&nbsp;
+          <span className="amount">
+            {currencyFormat(
+              parseFloat(validator.validatorPayment) / 1000000000000
+            )}
+          </span>
+          <span className="asset">&nbsp;ksm/day</span>
         </div>
       )}
     </StyledValidator>
