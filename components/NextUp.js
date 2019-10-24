@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { STAKING_VAL_QUERY } from '../graphql/queries';
+import { PHRAGMEN_RANK_QUERY } from '../graphql/queries';
 
 import { sortValidators } from '../lib/validators';
 
@@ -37,7 +37,7 @@ const NextUp = () => {
     loading: validatorLoading,
     error: validatorError,
     data: validatorData,
-  } = useQuery(STAKING_VAL_QUERY);
+  } = useQuery(PHRAGMEN_RANK_QUERY);
 
   if (validatorLoading)
     return (
@@ -58,25 +58,33 @@ const NextUp = () => {
       <div className="next-header">
         <h3>
           Next Up{' '}
-          <span className="small-print">updated every five minutes</span>
+          <span className="small-print">
+            sorted by{' '}
+            <a
+              href="https://wiki.polkadot.network/docs/en/learn-phragmen"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              phragmen
+            </a>
+            &nbsp;method
+          </span>
         </h3>
 
         <p>
           <span className="number">
-            {validatorData.stakingValidators.length}
+            {validatorData.phragmenValidators.validatorCount}
           </span>
           &nbsp;waiting
         </p>
       </div>
-      {sortValidators(validatorData.stakingValidators).map(
-        (validator, index) => (
-          <Validator
-            key={index + 1}
-            position={index + 1}
-            validator={validator}
-          />
-        )
-      )}
+      {validatorData.phragmenValidators.valCandidates.map(validator => (
+        <Validator
+          key={validator.rank}
+          position={validator.rank}
+          validator={validator}
+        />
+      ))}
     </StyledNextUp>
   );
 };

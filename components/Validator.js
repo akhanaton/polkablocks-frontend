@@ -112,36 +112,33 @@ const Validator = ({ validator, position }) => {
         <p>{humanize(position.toString())}</p>
       </div>
 
-      {validator.freeBalance && (
+      {validator.totalStake && (
         <div>
-          <p className="account">total:</p>&nbsp;
+          <p className="account">total stake:</p>&nbsp;
           <span className="amount">
-            {currencyFormat(parseFloat(validator.freeBalance) / 1000000000000)}
+            {currencyFormat(parseFloat(validator.totalStake) / 1000000000000)}
           </span>
           &nbsp;
           <span className="asset">ksm</span>
         </div>
       )}
 
-      {validator.activeBonded && (
+      {validator.validatorStake && (
         <div>
-          <p className="account">bonded:</p>&nbsp;
+          <p className="account">validator stake:</p>&nbsp;
           <span className="amount">
-            {currencyFormat(parseFloat(validator.activeBonded) / 1000000000000)}
+            {currencyFormat(
+              parseFloat(validator.validatorStake) / 1000000000000
+            )}
           </span>
           &nbsp;
           <span className="asset">ksm</span>
         </div>
       )}
-      {validator.validatorPayment && (
+      {validator.nominatorCount > 0 && (
         <div>
-          <p className="account">comm:</p>&nbsp;
-          <span className="amount">
-            {currencyFormat(
-              parseFloat(validator.validatorPayment) / 1000000000000
-            )}
-          </span>
-          <span className="asset">&nbsp;ksm/day</span>
+          <p className="account">nominators:</p>&nbsp;
+          <span className="amount">{validator.nominatorCount}</span>
         </div>
       )}
     </StyledValidator>
