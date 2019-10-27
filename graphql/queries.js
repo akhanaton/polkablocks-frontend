@@ -64,3 +64,9 @@ export const PHRAGMEN_RANK_QUERY = gql`
     }
   }
 `;
+
+export const NICK_QUERY = gql`
+  query NICK_QUERY($accountId: String!) {
+    nick(accountId: $accountId)
+  }
+`;

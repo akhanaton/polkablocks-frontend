@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Identicon from '@polkadot/react-identicon';
 import useClipboard from 'react-use-clipboard';
@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 
 import Icon from '../utils/Icon';
 import { humanize, formatAddress, currencyFormat } from '../lib/validators';
+import { NICK_QUERY } from '../graphql/queries';
 
 const StyledValidator = styled.div`
   display: grid;
@@ -81,14 +82,23 @@ const Validator = ({ validator, position }) => {
   const [isCopied, setCopied] = useClipboard('', {
     successDuration: 1000,
   });
-
+  const { loading, error, data } = useQuery(NICK_QUERY, {
+    variables: { accountId: validator.controllerId },
+  });
+  if (loading) return <p />;
+  if (error) return `Error! ${error.message}`;
   return (
     <StyledValidator>
       <div>
         <Identicon value={validator.controllerId} size={size} theme={theme} />
       </div>
       <div>
-        <p>{formatAddress(validator.controllerId)}</p>
+        {data.nick ? (
+          <p>{data.nick}</p>
+        ) : (
+          <p>{formatAddress(validator.controllerId)}</p>
+        )}
+
         <Clipboard
           text={validator.controllerId}
           render={({ copy }) => (
