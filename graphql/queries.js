@@ -40,3 +40,33 @@ export const LEDGER_QUERY = gql`
     }
   }
 `;
+
+export const PHRAGMEN_RANK_QUERY = gql`
+  query PHRAGMEN_RANK_QUERY {
+    phragmenValidators {
+      validatorCount
+      nominatorCount
+      totalIssuance
+      lowestStake
+      valCandidates {
+        rank
+        accountId
+        totalStake
+        validatorStake
+        nominatorStake
+        nominatorCount
+        controllerId
+        nominators {
+          accountId
+          stake
+        }
+      }
+    }
+  }
+`;
+
+export const NICK_QUERY = gql`
+  query NICK_QUERY($accountId: String!) {
+    nick(accountId: $accountId)
+  }
+`;

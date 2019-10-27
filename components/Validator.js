@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-
+import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Identicon from '@polkadot/react-identicon';
 import useClipboard from 'react-use-clipboard';
@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 
 import Icon from '../utils/Icon';
 import { humanize, formatAddress, currencyFormat } from '../lib/validators';
+import { NICK_QUERY } from '../graphql/queries';
 
 const StyledValidator = styled.div`
   display: grid;
@@ -81,14 +82,23 @@ const Validator = ({ validator, position }) => {
   const [isCopied, setCopied] = useClipboard('', {
     successDuration: 1000,
   });
-
+  const { loading, error, data } = useQuery(NICK_QUERY, {
+    variables: { accountId: validator.controllerId },
+  });
+  if (loading) return <p />;
+  if (error) return `Error! ${error.message}`;
   return (
     <StyledValidator>
       <div>
         <Identicon value={validator.controllerId} size={size} theme={theme} />
       </div>
       <div>
-        <p>{formatAddress(validator.controllerId)}</p>
+        {data.nick ? (
+          <p>{data.nick}</p>
+        ) : (
+          <p>{formatAddress(validator.controllerId)}</p>
+        )}
+
         <Clipboard
           text={validator.controllerId}
           render={({ copy }) => (
@@ -112,36 +122,33 @@ const Validator = ({ validator, position }) => {
         <p>{humanize(position.toString())}</p>
       </div>
 
-      {validator.freeBalance && (
+      {validator.totalStake && (
         <div>
-          <p className="account">total:</p>&nbsp;
+          <p className="account">total stake:</p>&nbsp;
           <span className="amount">
-            {currencyFormat(parseFloat(validator.freeBalance) / 1000000000000)}
+            {currencyFormat(parseFloat(validator.totalStake) / 1000000000000)}
           </span>
           &nbsp;
           <span className="asset">ksm</span>
         </div>
       )}
 
-      {validator.activeBonded && (
+      {validator.validatorStake && (
         <div>
-          <p className="account">bonded:</p>&nbsp;
+          <p className="account">validator stake:</p>&nbsp;
           <span className="amount">
-            {currencyFormat(parseFloat(validator.activeBonded) / 1000000000000)}
+            {currencyFormat(
+              parseFloat(validator.validatorStake) / 1000000000000
+            )}
           </span>
           &nbsp;
           <span className="asset">ksm</span>
         </div>
       )}
-      {validator.validatorPayment && (
+      {validator.nominatorCount > 0 && (
         <div>
-          <p className="account">comm:</p>&nbsp;
-          <span className="amount">
-            {currencyFormat(
-              parseFloat(validator.validatorPayment) / 1000000000000
-            )}
-          </span>
-          <span className="asset">&nbsp;ksm/day</span>
+          <p className="account">nominators:</p>&nbsp;
+          <span className="amount">{validator.nominatorCount}</span>
         </div>
       )}
     </StyledValidator>
