@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { PHRAGMEN_RANK_QUERY } from '../graphql/queries';
+import { CurrentElectedContext } from '../store';
+import { PHRAGMEN_RANK_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 
 import { sortValidators } from '../lib/validators';
 
@@ -32,12 +34,25 @@ const StyledLoader = styled.div`
   margin-top: 2.5rem;
 `;
 
+const getNextUp = (elected, candidates) => {
+  const nextUp = candidates.filter(
+    candidate => !elected.some(e => e.accountId === candidate.accountId)
+  );
+  return nextUp;
+};
+
 const NextUp = () => {
   const {
     loading: validatorLoading,
     error: validatorError,
     data: validatorData,
   } = useQuery(PHRAGMEN_RANK_QUERY);
+  const { elected, electedReady } = useContext(CurrentElectedContext);
+  const {
+    loading: countLoading,
+    error: countError,
+    data: countData,
+  } = useQuery(VALIDATOR_COUNT_QUERY);
 
   if (validatorLoading)
     return (
@@ -51,8 +66,14 @@ const NextUp = () => {
         />
       </StyledLoader>
     );
-  if (validatorError) return `Error! ${validatorError.message}`;
 
+  if (validatorError) return `Error! ${validatorError.message}`;
+  if (countLoading) return <p />;
+  if (!electedReady) return <p />;
+  const nextUp = getNextUp(
+    elected,
+    validatorData.phragmenValidators.valCandidates
+  );
   return (
     <StyledNextUp>
       <div className="next-header">
@@ -72,17 +93,16 @@ const NextUp = () => {
         </h3>
 
         <p>
-          <span className="number">
-            {validatorData.phragmenValidators.validatorCount}
-          </span>
+          <span className="number">{nextUp.length}</span>
           &nbsp;waiting
         </p>
       </div>
-      {validatorData.phragmenValidators.valCandidates.map(validator => (
+      {nextUp.map(validator => (
         <Validator
           key={validator.rank}
-          position={validator.rank}
+          position={validator.rank - 20}
           validator={validator}
+          elected={false}
         />
       ))}
     </StyledNextUp>
