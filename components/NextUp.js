@@ -34,7 +34,7 @@ const StyledLoader = styled.div`
   margin-top: 2.5rem;
 `;
 
-const getNextUp = (elected, candidates) => {
+const removeElected = (elected, candidates) => {
   const nextUp = candidates.filter(
     candidate => !elected.some(e => e.accountId === candidate.accountId)
   );
@@ -70,7 +70,8 @@ const NextUp = () => {
   if (validatorError) return `Error! ${validatorError.message}`;
   if (countLoading) return <p />;
   if (!electedReady) return <p />;
-  const nextUp = getNextUp(
+  console.log(validatorData.phragmenValidators);
+  const nextUp = removeElected(
     elected,
     validatorData.phragmenValidators.valCandidates
   );
