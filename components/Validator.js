@@ -78,29 +78,29 @@ const StyledValidator = styled.div`
 const size = 36;
 const theme = 'polkadot';
 
-const Validator = ({ validator, position }) => {
+const Validator = ({ validator, position, elected }) => {
   const [isCopied, setCopied] = useClipboard('', {
     successDuration: 1000,
   });
   const { loading, error, data } = useQuery(NICK_QUERY, {
-    variables: { accountId: validator.controllerId },
+    variables: { accountId: validator.accountId },
   });
   if (loading) return <p />;
   if (error) return `Error! ${error.message}`;
   return (
     <StyledValidator>
       <div>
-        <Identicon value={validator.controllerId} size={size} theme={theme} />
+        <Identicon value={validator.accountId} size={size} theme={theme} />
       </div>
       <div>
         {data.nick ? (
           <p>{data.nick}</p>
         ) : (
-          <p>{formatAddress(validator.controllerId)}</p>
+          <p>{formatAddress(validator.accountId)}</p>
         )}
 
         <Clipboard
-          text={validator.controllerId}
+          text={validator.accountId}
           render={({ copy }) => (
             <button
               type="button"
@@ -118,9 +118,12 @@ const Validator = ({ validator, position }) => {
           )}
         />
       </div>
-      <div>
-        <p>{humanize(position.toString())}</p>
-      </div>
+
+      {!elected && (
+        <div>
+          <p>{humanize(position.toString())}</p>
+        </div>
+      )}
 
       {validator.totalStake && (
         <div>

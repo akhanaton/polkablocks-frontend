@@ -1,9 +1,14 @@
+import { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { SESSION_VAL_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
+import { CurrentElectedContext } from '../store';
+import {
+  CURRENT_ELECTED_QUERY,
+  VALIDATOR_COUNT_QUERY,
+} from '../graphql/queries';
 
 const StyledCurrent = styled.div`
   .number {
@@ -32,13 +37,15 @@ const StyledLoader = styled.div`
 `;
 
 const CurrentValidators = () => {
-  const { loading, error, data } = useQuery(SESSION_VAL_QUERY);
+  const { loading, error, data } = useQuery(CURRENT_ELECTED_QUERY);
 
   const {
     loading: countLoading,
     error: countError,
     data: countData,
   } = useQuery(VALIDATOR_COUNT_QUERY);
+
+  const { setElected, setElectedReady } = useContext(CurrentElectedContext);
 
   if (loading)
     return (
@@ -53,6 +60,8 @@ const CurrentValidators = () => {
       </StyledLoader>
     );
 
+  setElected(data.currentElected);
+  setElectedReady(true);
   if (loading) return <p />;
   if (error) return `Error! ${error.message}`;
   if (countLoading) return 'Loading...';
@@ -67,8 +76,13 @@ const CurrentValidators = () => {
           &nbsp;slots
         </p>
       </div>
-      {data.sessionValidators.map((validator, index) => (
-        <Validator key={index + 1} position={index + 1} validator={validator} />
+      {data.currentElected.map((validator, index) => (
+        <Validator
+          key={index + 1}
+          position={index + 1}
+          validator={validator}
+          elected
+        />
       ))}
     </StyledCurrent>
   );

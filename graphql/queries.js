@@ -33,6 +33,14 @@ export const STAKING_VAL_QUERY = gql`
   }
 `;
 
+export const CURRENT_ELECTED_QUERY = gql`
+  query CURRENT_ELECTED_QUERY {
+    currentElected {
+      accountId
+    }
+  }
+`;
+
 export const LEDGER_QUERY = gql`
   query LEDGER_QUERY($accountId: String!) {
     ledger(accountId: $accountId) {
