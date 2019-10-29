@@ -98,10 +98,10 @@ const NextUp = () => {
           &nbsp;waiting
         </p>
       </div>
-      {nextUp.map(validator => (
+      {nextUp.map((validator, index) => (
         <Validator
           key={validator.rank}
-          position={validator.rank - 20}
+          position={index + 1}
           validator={validator}
           elected={false}
         />
