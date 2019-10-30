@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { CurrentElectedContext } from '../store';
-import {
-  CURRENT_ELECTED_QUERY,
-  VALIDATOR_COUNT_QUERY,
-} from '../graphql/queries';
+import { SessionValidatorsContext } from '../store';
+import { SESSION_VAL_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 
 const StyledCurrent = styled.div`
   .number {
@@ -37,7 +34,7 @@ const StyledLoader = styled.div`
 `;
 
 const CurrentValidators = () => {
-  const { loading, error, data } = useQuery(CURRENT_ELECTED_QUERY);
+  const { loading, error, data } = useQuery(SESSION_VAL_QUERY);
 
   const {
     loading: countLoading,
@@ -45,7 +42,9 @@ const CurrentValidators = () => {
     data: countData,
   } = useQuery(VALIDATOR_COUNT_QUERY);
 
-  const { setElected, setElectedReady } = useContext(CurrentElectedContext);
+  const { setValidators, setValidatorsReady } = useContext(
+    SessionValidatorsContext
+  );
 
   if (loading)
     return (
@@ -59,9 +58,8 @@ const CurrentValidators = () => {
         />
       </StyledLoader>
     );
-
-  setElected(data.currentElected);
-  setElectedReady(true);
+  setValidators(data.sessionValidators);
+  setValidatorsReady(true);
   if (loading) return <p />;
   if (error) return `Error! ${error.message}`;
   if (countLoading) return 'Loading...';
@@ -72,11 +70,13 @@ const CurrentValidators = () => {
       <div className="next-header">
         <h3>Validators</h3>
         <p>
-          <span className="number">{countData.validatorCount}</span>
+          <span className="number">
+            {data.sessionValidators.length} of {countData.validatorCount}
+          </span>
           &nbsp;slots
         </p>
       </div>
-      {data.currentElected.map((validator, index) => (
+      {data.sessionValidators.map((validator, index) => (
         <Validator
           key={index + 1}
           position={index + 1}

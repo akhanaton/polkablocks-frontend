@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { CurrentElectedContext } from '../store';
+import { SessionValidatorsContext } from '../store';
 import { PHRAGMEN_RANK_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 
 import { sortValidators } from '../lib/validators';
@@ -34,10 +34,11 @@ const StyledLoader = styled.div`
   margin-top: 2.5rem;
 `;
 
-const removeElected = (elected, candidates) => {
+const removeCurrent = (validators, candidates) => {
   const nextUp = candidates.filter(
-    candidate => !elected.some(e => e.accountId === candidate.accountId)
+    candidate => !validators.some(e => e.accountId === candidate.accountId)
   );
+
   return nextUp;
 };
 
@@ -47,7 +48,7 @@ const NextUp = () => {
     error: validatorError,
     data: validatorData,
   } = useQuery(PHRAGMEN_RANK_QUERY);
-  const { elected, electedReady } = useContext(CurrentElectedContext);
+  const { validators, validatorsReady } = useContext(SessionValidatorsContext);
   const {
     loading: countLoading,
     error: countError,
@@ -69,10 +70,10 @@ const NextUp = () => {
 
   if (validatorError) return `Error! ${validatorError.message}`;
   if (countLoading) return <p />;
-  if (!electedReady) return <p />;
-  console.log(validatorData.phragmenValidators);
-  const nextUp = removeElected(
-    elected,
+  if (!validatorsReady) return <p />;
+
+  const currentValidators = removeCurrent(
+    validators,
     validatorData.phragmenValidators.valCandidates
   );
   return (
@@ -94,11 +95,11 @@ const NextUp = () => {
         </h3>
 
         <p>
-          <span className="number">{nextUp.length}</span>
+          <span className="number">{currentValidators.length}</span>
           &nbsp;waiting
         </p>
       </div>
-      {nextUp.map((validator, index) => (
+      {currentValidators.map((validator, index) => (
         <Validator
           key={validator.rank}
           position={index + 1}

@@ -1,2 +1,2 @@
 export * from './api';
-export * from './currentElected';
+export * from './sessionValidators';

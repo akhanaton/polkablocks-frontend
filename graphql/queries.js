@@ -16,6 +16,7 @@ export const SESSION_VAL_QUERY = gql`
   query SESSION_VAL_QUERY {
     sessionValidators {
       controllerId
+      accountId
     }
   }
 `;
