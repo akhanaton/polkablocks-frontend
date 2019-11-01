@@ -10,7 +10,7 @@ import theme from '../static/styles/Theme';
 
 const id = process.env.NODE_ENV === 'development' ? '' : process.env.GTM_ID;
 const tagManagerArgs = {
-  id,
+  gtmId: id,
 };
 
 class MyApp extends App {
