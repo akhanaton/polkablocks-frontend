@@ -1,0 +1,10 @@
+{
+  "env": {
+    "GTM_ID": "@gtm-id"
+  },
+  "build": {
+    "env": {
+      "GTM_ID": "@gtm-id"
+    }
+  }
+}
