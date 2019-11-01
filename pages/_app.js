@@ -20,6 +20,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
+    console.log(process.env.NODE_ENV);
     return (
       <ContextProvider>
         <ThemeProvider theme={theme}>
