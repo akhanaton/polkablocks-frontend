@@ -8,9 +8,8 @@ import { withApollo } from '../lib/apollo';
 
 import theme from '../static/styles/Theme';
 
-const id = process.env.NODE_ENV === 'development' ? '' : process.env.GTM_ID;
 const tagManagerArgs = {
-  gtmId: id,
+  gtmId: process.env.GTM_ID,
 };
 
 class MyApp extends App {
@@ -20,7 +19,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props;
-    console.log(process.env.NODE_ENV);
+
     return (
       <ContextProvider>
         <ThemeProvider theme={theme}>
