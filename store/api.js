@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
 // const WS_PROVIDER = "ws://127.0.0.1:9944";
-const WS_PROVIDER = 'wss://kusama-rpc.polkadot.io/';
+const WS_PROVIDER = 'wss://tartanblocks.com/';
 
 export const ApiContext = createContext();
 
