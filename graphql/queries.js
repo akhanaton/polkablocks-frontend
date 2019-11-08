@@ -16,6 +16,7 @@ export const SESSION_VAL_QUERY = gql`
   query SESSION_VAL_QUERY {
     sessionValidators {
       controllerId
+      accountId
     }
   }
 `;
@@ -29,6 +30,14 @@ export const STAKING_VAL_QUERY = gql`
       activeBonded
       accountId
       validatorPayment
+    }
+  }
+`;
+
+export const CURRENT_ELECTED_QUERY = gql`
+  query CURRENT_ELECTED_QUERY {
+    currentElected {
+      accountId
     }
   }
 `;

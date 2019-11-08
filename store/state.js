@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { ApiProvider } from './api';
+import { SessionValidatorsProvider } from './sessionValidators';
 
 function ProviderComposer({ contexts, children }) {
   return contexts.reduceRight(
@@ -15,7 +16,11 @@ function ProviderComposer({ contexts, children }) {
 
 function ContextProvider({ children }) {
   return (
-    <ProviderComposer contexts={[<ApiProvider />]}>{children}</ProviderComposer>
+    <ProviderComposer
+      contexts={[<ApiProvider />, <SessionValidatorsProvider />]}
+    >
+      {children}
+    </ProviderComposer>
   );
 }
 

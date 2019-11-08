@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
+import { SessionValidatorsContext } from '../store';
 import { SESSION_VAL_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 
 const StyledCurrent = styled.div`
@@ -40,6 +42,10 @@ const CurrentValidators = () => {
     data: countData,
   } = useQuery(VALIDATOR_COUNT_QUERY);
 
+  const { setValidators, setValidatorsReady } = useContext(
+    SessionValidatorsContext
+  );
+
   if (loading)
     return (
       <StyledLoader>
@@ -52,7 +58,8 @@ const CurrentValidators = () => {
         />
       </StyledLoader>
     );
-
+  setValidators(data.sessionValidators);
+  setValidatorsReady(true);
   if (loading) return <p />;
   if (error) return `Error! ${error.message}`;
   if (countLoading) return 'Loading...';
@@ -63,12 +70,19 @@ const CurrentValidators = () => {
       <div className="next-header">
         <h3>Validators</h3>
         <p>
-          <span className="number">{countData.validatorCount}</span>
+          <span className="number">
+            {data.sessionValidators.length} of {countData.validatorCount}
+          </span>
           &nbsp;slots
         </p>
       </div>
       {data.sessionValidators.map((validator, index) => (
-        <Validator key={index + 1} position={index + 1} validator={validator} />
+        <Validator
+          key={index + 1}
+          position={index + 1}
+          validator={validator}
+          elected
+        />
       ))}
     </StyledCurrent>
   );

@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import Validator from './Validator';
-import { PHRAGMEN_RANK_QUERY } from '../graphql/queries';
+import { SessionValidatorsContext } from '../store';
+import { PHRAGMEN_RANK_QUERY, VALIDATOR_COUNT_QUERY } from '../graphql/queries';
 
 import { sortValidators } from '../lib/validators';
 
@@ -32,12 +34,26 @@ const StyledLoader = styled.div`
   margin-top: 2.5rem;
 `;
 
+const removeCurrent = (validators, candidates) => {
+  const nextUp = candidates.filter(
+    candidate => !validators.some(e => e.accountId === candidate.accountId)
+  );
+
+  return nextUp;
+};
+
 const NextUp = () => {
   const {
     loading: validatorLoading,
     error: validatorError,
     data: validatorData,
   } = useQuery(PHRAGMEN_RANK_QUERY);
+  const { validators, validatorsReady } = useContext(SessionValidatorsContext);
+  const {
+    loading: countLoading,
+    error: countError,
+    data: countData,
+  } = useQuery(VALIDATOR_COUNT_QUERY);
 
   if (validatorLoading)
     return (
@@ -51,8 +67,15 @@ const NextUp = () => {
         />
       </StyledLoader>
     );
-  if (validatorError) return `Error! ${validatorError.message}`;
 
+  if (validatorError) return `Error! ${validatorError.message}`;
+  if (countLoading) return <p />;
+  if (!validatorsReady) return <p />;
+
+  const currentValidators = removeCurrent(
+    validators,
+    validatorData.phragmenValidators.valCandidates
+  );
   return (
     <StyledNextUp>
       <div className="next-header">
@@ -72,17 +95,16 @@ const NextUp = () => {
         </h3>
 
         <p>
-          <span className="number">
-            {validatorData.phragmenValidators.validatorCount}
-          </span>
+          <span className="number">{currentValidators.length}</span>
           &nbsp;waiting
         </p>
       </div>
-      {validatorData.phragmenValidators.valCandidates.map(validator => (
+      {currentValidators.map((validator, index) => (
         <Validator
           key={validator.rank}
-          position={validator.rank}
+          position={index + 1}
           validator={validator}
+          elected={false}
         />
       ))}
     </StyledNextUp>
